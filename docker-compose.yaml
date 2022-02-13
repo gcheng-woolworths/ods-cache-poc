@@ -1,0 +1,19 @@
+version: '3'
+services:
+  mymongo:
+    image: mongo:latest
+    volumes:
+      - ./data:/data/db
+    ports:
+      - '2717:27017' # map internal port 27017 to 2717
+  server:
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - ./:/app
+    environment:
+      - DEMO=demo
+    ports:
+      - '3000:3000'
