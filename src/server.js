@@ -69,13 +69,21 @@ app.get('/partners/:partnerId/reasons/:reasonCode', (req, res) => {
 app.get('/partners/:partnerId/stores/:storeId', (req, res) => {
   const { partnerId, storeId } = req.params;
   console.log(`search for partner ${partnerId}, store ${storeId}`);
-  res.send(`store #${storeId}`);
+  const q = { partnerId, storeId };
+  Store.find(q).then(store => {
+    console.log('result->', store);
+    res.json({store});
+  });
 });
 
 app.get('/campaigns/:campaignId/meta', (req, res) => {
   const { campaignId } = req.params;
   console.log(`search for campaign ${campaignId}`);
-  res.send(`campaign meta of campaign #${campaignId}`);
+  const q = { campaignId };
+  CampaignMeta.find(q).then(meta => {
+    console.log('meta->', meta);
+    res.json({meta});
+  })
 });
 
 module.exports = { app };
