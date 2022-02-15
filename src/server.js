@@ -2,6 +2,12 @@ const process = require('process');
 const express = require('express');
 const mongoose = require('mongoose');
 
+const Item = require('./models/item');
+const Reason = require('./models/reason');
+const CampaignMeta = require('./models/campaign-meta');
+const Partner = require('./models/partner');
+const Store = require('./models/store');
+
 const app = express();
 
 const DB_URI = process.env['DB_URI'] || 'mongodb://mymongo:27017/ods';
@@ -14,12 +20,6 @@ app.use(express.urlencoded({
 mongoose.connect(DB_URI, { useNewUrlParser: true } )
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error(err));
-
-const Item = require('./models/item');
-const Reason = require('./models/reason');
-const CampaignMeta = require('./models/campaign-meta');
-const Partner = require('./models/partner');
-const Store = require('./models/store');
 
 app.get('/health-check', (req, res) => {
   res.send('OK');
@@ -44,6 +44,15 @@ app.post('/item/add', (req, res) => {
 app.get('/partners', (req, res) => {
   Partner.find().then(partners => {
     res.json({partners})
+  });
+});
+
+app.get('/partners/:partnerId', (req, res) => {
+  const { partnerId } = req.params;
+  const q = { partnerId };
+  Partner.find(q).then(([partner, ...rest]) => {
+    console.log('partner', partner);
+    res.json({ partner } );
   });
 });
 
